@@ -1,38 +1,22 @@
-from fastapi import FastAPI, APIRouter, status
+from fastapi import FastAPI
+from pydantic import BaseModel
+from db import create_tables
+import uvicorn
+import api
 
+# Initialize the app
 app = FastAPI()
-router = APIRouter()
+
+app.include_router(api.router)
 
 
-@router.get('/')
-def get_transactions():
-    return "return a list of transaction items"
+@app.on_event("startup")
+def on_startup():
+    create_tables()
 
 
-@router.post('/', status_code=status.HTTP_201_CREATED)
-def create_transactions():
-    return "create transaction item"
-
-
-@router.patch('/{transactionId}')
-def update_transaction(transactionId: str):
-    return f"update transaction transaction with id {transactionId}"
-
-
-@router.get('/{transactionId}')
-def get_transaction(transactionId: str):
-    return f"get transaction item with id {transactionId}"
-
-
-@router.delete('/{transactionId}')
-def delete_transaction(transactionId: str):
-    return f"delete transaction item with id {transactionId}"
-
-
-app.include_router(router, tags=['Transactions'], prefix='/api/transactions')
-
-
-@app.get("/api/transaction")
-def root():
-    return {"message": "Welcome to FastAPI with SQLAlchemy"}
+# GET operation at route '/'
+@app.get('/')
+def root_api():
+    return {"message": "Welcome to Towfiq's Transaction App"}
 
