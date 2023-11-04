@@ -7,7 +7,7 @@ from sqlmodel import SQLModel                       # NEW
 
 from alembic import context
 
-from transaction.models import TransactionInfo 
+from models import TransactionInfo 
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
