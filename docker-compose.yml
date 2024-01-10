@@ -1,0 +1,40 @@
+version: '3.10'
+
+networks:
+  my_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+
+services:
+  db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: transaction
+      MYSQL_USER: aqif
+      MYSQL_PASSWORD: 12345678
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - my_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=mysql+pymysql://aqif:12345678@db:3306/transaction
+    volumes:
+      - .:/app
+    networks:
+      - my_network
+
+
